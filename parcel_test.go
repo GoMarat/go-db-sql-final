@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 var (
@@ -43,7 +43,7 @@ func TestAddGetDelete(t *testing.T) {
 	// add
 	// добавляем новую посылку в БД, убедждаемся в отсутствии ошибки и наличии идентификатора
 	id, err := store.Add(parcel)
-	
+
 	require.NoError(t, err)
 	parcel.Number = id
 	require.NotEmpty(t, id)
@@ -54,16 +54,15 @@ func TestAddGetDelete(t *testing.T) {
 	// проверяем, что значения всех полей в полученном объекте совпадают со значениями полей в переменной parcel
 	require.Equal(t, parcel, par)
 
-
 	// delete
 	// удаляем добавленную посылку, убеждаемся в отсутствии ошибки
-	
+
 	err = store.Delete(id)
 	require.NoError(t, err)
-// проверяем, что посылку больше нельзя получить из БД
+	// проверяем, что посылку больше нельзя получить из БД
 
 	_, err = store.Get(id)
-    require.Equal(t, sql.ErrNoRows, err)
+	require.ErrorIs(t, err, sql.ErrNoRows)
 }
 
 // TestSetAddress проверяет обновление адреса
@@ -79,7 +78,7 @@ func TestSetAddress(t *testing.T) {
 	// add
 	// добавляем новую посылку в БД, убеждаемся в отсутствии ошибки и наличии идентификатора
 	id, err := store.Add(parcel)
-	
+
 	require.NoError(t, err)
 	require.NotEmpty(t, id)
 	// set address
@@ -107,7 +106,7 @@ func TestSetStatus(t *testing.T) {
 	// add
 	// добавляем новую посылку в БД, убеждаемся в отсутствии ошибки и наличии идентификатора
 	id, err := store.Add(parcel)
-	
+
 	require.NoError(t, err)
 	require.NotEmpty(t, id)
 	// set status
@@ -148,9 +147,9 @@ func TestGetByClient(t *testing.T) {
 	// add
 	for i := 0; i < len(parcels); i++ {
 		id, err := store.Add(parcel)
-	
+
 		require.NoError(t, err)
-		require.NotEmpty(t, id)// добавляем новую посылку в БД, убеждаемся в отсутствии ошибки и наличии идентификатора
+		require.NotEmpty(t, id) // добавляем новую посылку в БД, убеждаемся в отсутствии ошибки и наличии идентификатора
 
 		// обновляем идентификатор добавленной у посылки
 		parcels[i].Number = id
@@ -160,7 +159,7 @@ func TestGetByClient(t *testing.T) {
 	}
 
 	// get by client
-	storedParcels, err := store.GetByClient(client)// получаем список посылок по идентификатору клиента, сохранённого в переменной client
+	storedParcels, err := store.GetByClient(client) // получаем список посылок по идентификатору клиента, сохранённого в переменной client
 	// убеждаемся в отсутствии ошибки
 	require.NoError(t, err)
 	// убеждаемся, что количество полученных посылок совпадает с количеством добавленных
